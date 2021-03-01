@@ -6,5 +6,9 @@
   "weather-service": {
     "addr": "weather-service",
     "port": 9091
+  },
+  "beverage-service": {
+    "addr": "beverage-service",
+    "port": 9092
   }
 }

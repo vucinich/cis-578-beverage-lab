@@ -1,16 +1,25 @@
 version: "3"
+
 services:
+  
   order-beverage-service:
-    image: probir/vending-machine-microservices:latest
+    image: akatzuka/cis-578-beverage-lab:version_5
     hostname: order-beverage-service
     restart: always
     entrypoint: OrderBeverageService
 
   weather-service:
-    image: probir/vending-machine-microservices:latest
+    image: akatzuka/cis-578-beverage-lab:version_5
     hostname: weather-service
     restart: always
     entrypoint: WeatherService
+  
+  beverage-service:
+    image: akatzuka/cis-578-beverage-lab:version_5
+    hostname: beverage-service
+    restart: always
+    entrypoint: BeverageService
+
   nginx-thrift:
     image: yg397/openresty-thrift:xenial
     hostname: nginx-thrift

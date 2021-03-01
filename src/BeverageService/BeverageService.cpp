@@ -5,7 +5,7 @@
 #include <signal.h>
 
 #include "../utils.h"
-#include "beverage-preference-handler.h"
+#include "BeverageHandler.h"
 
 using json = nlohmann::json;
 using apache::thrift::server::TThreadedServer;
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
   }
 
   // 3: get my port
-  int my_port = config_json["beverage-preference-handler"]["port"];
+  int my_port = config_json["beverage-service"]["port"];
 
   // 4: configure this server
   TThreadedServer server(
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   );
   
   // 7: start the server
-  std::cout << "Starting the beverage-preference-handler server ..." << std::endl;
+  std::cout << "Starting the beverage server ..." << std::endl;
   server.serve();
   return 0;
 }

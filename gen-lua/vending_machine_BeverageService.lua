@@ -9,25 +9,25 @@
 require 'Thrift'
 require 'vending_machine_ttypes'
 
-OrderBeverageServiceClient = __TObject.new(__TClient, {
-  __type = 'OrderBeverageServiceClient'
+BeverageServiceClient = __TObject.new(__TClient, {
+  __type = 'BeverageServiceClient'
 })
 
-function OrderBeverageServiceClient:PlaceOrder(city)
-  self:send_PlaceOrder(city)
-  return self:recv_PlaceOrder(city)
+function BeverageServiceClient:GetBeverage(beverage)
+  self:send_GetBeverage(beverage)
+  return self:recv_GetBeverage(beverage)
 end
 
-function OrderBeverageServiceClient:send_PlaceOrder(city)
-  self.oprot:writeMessageBegin('PlaceOrder', TMessageType.CALL, self._seqid)
-  local args = PlaceOrder_args:new{}
-  args.city = city
+function BeverageServiceClient:send_GetBeverage(beverage)
+  self.oprot:writeMessageBegin('GetBeverage', TMessageType.CALL, self._seqid)
+  local args = GetBeverage_args:new{}
+  args.beverage = beverage
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function OrderBeverageServiceClient:recv_PlaceOrder(city)
+function BeverageServiceClient:recv_GetBeverage(beverage)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -35,27 +35,25 @@ function OrderBeverageServiceClient:recv_PlaceOrder(city)
     self.iprot:readMessageEnd()
     error(x)
   end
-  local result = PlaceOrder_result:new{}
+  local result = GetBeverage_result:new{}
   result:read(self.iprot)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
     return result.success
-  elseif result.se then
-    error(result.se)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-OrderBeverageServiceIface = __TObject:new{
-  __type = 'OrderBeverageServiceIface'
+BeverageServiceIface = __TObject:new{
+  __type = 'BeverageServiceIface'
 }
 
 
-OrderBeverageServiceProcessor = __TObject.new(__TProcessor
+BeverageServiceProcessor = __TObject.new(__TProcessor
 , {
- __type = 'OrderBeverageServiceProcessor'
+ __type = 'BeverageServiceProcessor'
 })
 
-function OrderBeverageServiceProcessor:process(iprot, oprot, server_ctx)
+function BeverageServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
@@ -76,22 +74,20 @@ function OrderBeverageServiceProcessor:process(iprot, oprot, server_ctx)
   end
 end
 
-function OrderBeverageServiceProcessor:process_PlaceOrder(seqid, iprot, oprot, server_ctx)
-  local args = PlaceOrder_args:new{}
+function BeverageServiceProcessor:process_GetBeverage(seqid, iprot, oprot, server_ctx)
+  local args = GetBeverage_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
-  local result = PlaceOrder_result:new{}
-  local status, res = pcall(self.handler.PlaceOrder, self.handler, args.city)
+  local result = GetBeverage_result:new{}
+  local status, res = pcall(self.handler.GetBeverage, self.handler, args.beverage)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
-  elseif ttype(res) == 'ServiceException' then
-    result.se = res
   else
     result.success = res
   end
-  oprot:writeMessageBegin('PlaceOrder', reply_type, seqid)
+  oprot:writeMessageBegin('GetBeverage', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
@@ -100,19 +96,19 @@ end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
-PlaceOrder_args = __TObject:new{
-  city
+GetBeverage_args = __TObject:new{
+  beverage
 }
 
-function PlaceOrder_args:read(iprot)
+function GetBeverage_args:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.I64 then
-        self.city = iprot:readI64()
+      if ftype == TType.I32 then
+        self.beverage = iprot:readI32()
       else
         iprot:skip(ftype)
       end
@@ -124,38 +120,30 @@ function PlaceOrder_args:read(iprot)
   iprot:readStructEnd()
 end
 
-function PlaceOrder_args:write(oprot)
-  oprot:writeStructBegin('PlaceOrder_args')
-  if self.city ~= nil then
-    oprot:writeFieldBegin('city', TType.I64, 1)
-    oprot:writeI64(self.city)
+function GetBeverage_args:write(oprot)
+  oprot:writeStructBegin('GetBeverage_args')
+  if self.beverage ~= nil then
+    oprot:writeFieldBegin('beverage', TType.I32, 1)
+    oprot:writeI32(self.beverage)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
 
-PlaceOrder_result = __TObject:new{
-  success,
-  se
+GetBeverage_result = __TObject:new{
+  success
 }
 
-function PlaceOrder_result:read(iprot)
+function GetBeverage_result:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.STRING then
-        self.success = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.se = ServiceException:new{}
-        self.se:read(iprot)
+      if ftype == TType.I32 then
+        self.success = iprot:readI32()
       else
         iprot:skip(ftype)
       end
@@ -167,16 +155,11 @@ function PlaceOrder_result:read(iprot)
   iprot:readStructEnd()
 end
 
-function PlaceOrder_result:write(oprot)
-  oprot:writeStructBegin('PlaceOrder_result')
+function GetBeverage_result:write(oprot)
+  oprot:writeStructBegin('GetBeverage_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRING, 0)
-    oprot:writeString(self.success)
-    oprot:writeFieldEnd()
-  end
-  if self.se ~= nil then
-    oprot:writeFieldBegin('se', TType.STRUCT, 1)
-    self.se:write(oprot)
+    oprot:writeFieldBegin('success', TType.I32, 0)
+    oprot:writeI32(self.success)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
