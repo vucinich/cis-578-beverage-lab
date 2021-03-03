@@ -13,21 +13,21 @@ BeverageServiceClient = __TObject.new(__TClient, {
   __type = 'BeverageServiceClient'
 })
 
-function BeverageServiceClient:GetBeverage(beverage)
-  self:send_GetBeverage(beverage)
-  return self:recv_GetBeverage(beverage)
+function BeverageServiceClient:GetBeverage(btype)
+  self:send_GetBeverage(btype)
+  return self:recv_GetBeverage(btype)
 end
 
-function BeverageServiceClient:send_GetBeverage(beverage)
+function BeverageServiceClient:send_GetBeverage(btype)
   self.oprot:writeMessageBegin('GetBeverage', TMessageType.CALL, self._seqid)
   local args = GetBeverage_args:new{}
-  args.beverage = beverage
+  args.btype = btype
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function BeverageServiceClient:recv_GetBeverage(beverage)
+function BeverageServiceClient:recv_GetBeverage(btype)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -80,7 +80,7 @@ function BeverageServiceProcessor:process_GetBeverage(seqid, iprot, oprot, serve
   args:read(iprot)
   iprot:readMessageEnd()
   local result = GetBeverage_result:new{}
-  local status, res = pcall(self.handler.GetBeverage, self.handler, args.beverage)
+  local status, res = pcall(self.handler.GetBeverage, self.handler, args.btype)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -97,7 +97,7 @@ end
 -- HELPER FUNCTIONS AND STRUCTURES
 
 GetBeverage_args = __TObject:new{
-  beverage
+  btype
 }
 
 function GetBeverage_args:read(iprot)
@@ -108,7 +108,7 @@ function GetBeverage_args:read(iprot)
       break
     elseif fid == 1 then
       if ftype == TType.I32 then
-        self.beverage = iprot:readI32()
+        self.btype = iprot:readI32()
       else
         iprot:skip(ftype)
       end
@@ -122,9 +122,9 @@ end
 
 function GetBeverage_args:write(oprot)
   oprot:writeStructBegin('GetBeverage_args')
-  if self.beverage ~= nil then
-    oprot:writeFieldBegin('beverage', TType.I32, 1)
-    oprot:writeI32(self.beverage)
+  if self.btype ~= nil then
+    oprot:writeFieldBegin('btype', TType.I32, 1)
+    oprot:writeI32(self.btype)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -142,8 +142,8 @@ function GetBeverage_result:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.I32 then
-        self.success = iprot:readI32()
+      if ftype == TType.STRING then
+        self.success = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -158,8 +158,8 @@ end
 function GetBeverage_result:write(oprot)
   oprot:writeStructBegin('GetBeverage_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.I32, 0)
-    oprot:writeI32(self.success)
+    oprot:writeFieldBegin('success', TType.STRING, 0)
+    oprot:writeString(self.success)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

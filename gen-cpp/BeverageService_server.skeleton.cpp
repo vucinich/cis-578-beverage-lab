@@ -20,7 +20,7 @@ class BeverageServiceHandler : virtual public BeverageServiceIf {
     // Your initialization goes here
   }
 
-  BeverageType::type GetBeverage(const BeverageType::type beverage) {
+  void GetBeverage(std::string& _return, const BeverageType::type btype) {
     // Your implementation goes here
     printf("GetBeverage\n");
   }

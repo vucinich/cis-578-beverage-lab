@@ -38,8 +38,8 @@ uint32_t BeverageService_GetBeverage_args::read(::apache::thrift::protocol::TPro
         if (ftype == ::apache::thrift::protocol::T_I32) {
           int32_t ecast8;
           xfer += iprot->readI32(ecast8);
-          this->beverage = (BeverageType::type)ecast8;
-          this->__isset.beverage = true;
+          this->btype = (BeverageType::type)ecast8;
+          this->__isset.btype = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -61,8 +61,8 @@ uint32_t BeverageService_GetBeverage_args::write(::apache::thrift::protocol::TPr
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("BeverageService_GetBeverage_args");
 
-  xfer += oprot->writeFieldBegin("beverage", ::apache::thrift::protocol::T_I32, 1);
-  xfer += oprot->writeI32((int32_t)this->beverage);
+  xfer += oprot->writeFieldBegin("btype", ::apache::thrift::protocol::T_I32, 1);
+  xfer += oprot->writeI32((int32_t)this->btype);
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -80,8 +80,8 @@ uint32_t BeverageService_GetBeverage_pargs::write(::apache::thrift::protocol::TP
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("BeverageService_GetBeverage_pargs");
 
-  xfer += oprot->writeFieldBegin("beverage", ::apache::thrift::protocol::T_I32, 1);
-  xfer += oprot->writeI32((int32_t)(*(this->beverage)));
+  xfer += oprot->writeFieldBegin("btype", ::apache::thrift::protocol::T_I32, 1);
+  xfer += oprot->writeI32((int32_t)(*(this->btype)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -116,10 +116,8 @@ uint32_t BeverageService_GetBeverage_result::read(::apache::thrift::protocol::TP
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I32) {
-          int32_t ecast9;
-          xfer += iprot->readI32(ecast9);
-          this->success = (BeverageType::type)ecast9;
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->success);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -144,8 +142,8 @@ uint32_t BeverageService_GetBeverage_result::write(::apache::thrift::protocol::T
   xfer += oprot->writeStructBegin("BeverageService_GetBeverage_result");
 
   if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_I32, 0);
-    xfer += oprot->writeI32((int32_t)this->success);
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
+    xfer += oprot->writeString(this->success);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -180,10 +178,8 @@ uint32_t BeverageService_GetBeverage_presult::read(::apache::thrift::protocol::T
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I32) {
-          int32_t ecast10;
-          xfer += iprot->readI32(ecast10);
-          (*(this->success)) = (BeverageType::type)ecast10;
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString((*(this->success)));
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -201,19 +197,19 @@ uint32_t BeverageService_GetBeverage_presult::read(::apache::thrift::protocol::T
   return xfer;
 }
 
-BeverageType::type BeverageServiceClient::GetBeverage(const BeverageType::type beverage)
+void BeverageServiceClient::GetBeverage(std::string& _return, const BeverageType::type btype)
 {
-  send_GetBeverage(beverage);
-  return recv_GetBeverage();
+  send_GetBeverage(btype);
+  recv_GetBeverage(_return);
 }
 
-void BeverageServiceClient::send_GetBeverage(const BeverageType::type beverage)
+void BeverageServiceClient::send_GetBeverage(const BeverageType::type btype)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("GetBeverage", ::apache::thrift::protocol::T_CALL, cseqid);
 
   BeverageService_GetBeverage_pargs args;
-  args.beverage = &beverage;
+  args.btype = &btype;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -221,7 +217,7 @@ void BeverageServiceClient::send_GetBeverage(const BeverageType::type beverage)
   oprot_->getTransport()->flush();
 }
 
-BeverageType::type BeverageServiceClient::recv_GetBeverage()
+void BeverageServiceClient::recv_GetBeverage(std::string& _return)
 {
 
   int32_t rseqid = 0;
@@ -246,7 +242,6 @@ BeverageType::type BeverageServiceClient::recv_GetBeverage()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  BeverageType::type _return;
   BeverageService_GetBeverage_presult result;
   result.success = &_return;
   result.read(iprot_);
@@ -254,7 +249,8 @@ BeverageType::type BeverageServiceClient::recv_GetBeverage()
   iprot_->getTransport()->readEnd();
 
   if (result.__isset.success) {
-    return _return;
+    // _return pointer has now been filled
+    return;
   }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetBeverage failed: unknown result");
 }
@@ -301,7 +297,7 @@ void BeverageServiceProcessor::process_GetBeverage(int32_t seqid, ::apache::thri
 
   BeverageService_GetBeverage_result result;
   try {
-    result.success = iface_->GetBeverage(args.beverage);
+    iface_->GetBeverage(result.success, args.btype);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
@@ -339,20 +335,20 @@ void BeverageServiceProcessor::process_GetBeverage(int32_t seqid, ::apache::thri
   return processor;
 }
 
-BeverageType::type BeverageServiceConcurrentClient::GetBeverage(const BeverageType::type beverage)
+void BeverageServiceConcurrentClient::GetBeverage(std::string& _return, const BeverageType::type btype)
 {
-  int32_t seqid = send_GetBeverage(beverage);
-  return recv_GetBeverage(seqid);
+  int32_t seqid = send_GetBeverage(btype);
+  recv_GetBeverage(_return, seqid);
 }
 
-int32_t BeverageServiceConcurrentClient::send_GetBeverage(const BeverageType::type beverage)
+int32_t BeverageServiceConcurrentClient::send_GetBeverage(const BeverageType::type btype)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
   oprot_->writeMessageBegin("GetBeverage", ::apache::thrift::protocol::T_CALL, cseqid);
 
   BeverageService_GetBeverage_pargs args;
-  args.beverage = &beverage;
+  args.btype = &btype;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -363,7 +359,7 @@ int32_t BeverageServiceConcurrentClient::send_GetBeverage(const BeverageType::ty
   return cseqid;
 }
 
-BeverageType::type BeverageServiceConcurrentClient::recv_GetBeverage(const int32_t seqid)
+void BeverageServiceConcurrentClient::recv_GetBeverage(std::string& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -401,7 +397,6 @@ BeverageType::type BeverageServiceConcurrentClient::recv_GetBeverage(const int32
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      BeverageType::type _return;
       BeverageService_GetBeverage_presult result;
       result.success = &_return;
       result.read(iprot_);
@@ -409,8 +404,9 @@ BeverageType::type BeverageServiceConcurrentClient::recv_GetBeverage(const int32
       iprot_->getTransport()->readEnd();
 
       if (result.__isset.success) {
+        // _return pointer has now been filled
         sentry.commit();
-        return _return;
+        return;
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetBeverage failed: unknown result");

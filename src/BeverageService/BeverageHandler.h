@@ -19,7 +19,7 @@ class BeverageServiceHandler : public BeverageServiceIf {
   BeverageServiceHandler();
   ~BeverageServiceHandler() override=default;
 
-  BeverageType::type GetBeverage(BeverageType::type btype) override;
+  void GetBeverage(std::string& _return, BeverageType::type btype) override;
 };
 
 // Constructor
@@ -29,15 +29,20 @@ BeverageServiceHandler::BeverageServiceHandler() {
 
 // Remote Procedure "PlaceOrder"
 
-BeverageType::type BeverageServiceHandler::GetBeverage(BeverageType::type btype) {
+void BeverageServiceHandler::GetBeverage(std::string& _return, BeverageType::type btype) {
     printf("GetBeverage\n");
     
-    if btype == BeverageType::type::HOT
-        string bev [3] = {"cappuccino", "latte", "espresso"};
-        return bev[rand() % 3];
+    std::string bev_cold [3] = {"cappuccino", "latte", "espresso"};
+    std::string bev_hot [3] = {"lemonade", "ice tea", "soda"};
+
+    if (btype == BeverageType::type::HOT)
+    {
+        _return = bev_cold[rand() % 3];
+    }
     else
-        string bev [3] = {"lemonade", "ice tea", "soda"};
-        return bev[rand() % 3];
+    {
+        _return = bev_hot[rand() % 3];
+    }
 }
 
 } // namespace vending_machine

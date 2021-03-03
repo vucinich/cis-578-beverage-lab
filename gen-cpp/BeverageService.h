@@ -22,7 +22,7 @@ namespace vending_machine {
 class BeverageServiceIf {
  public:
   virtual ~BeverageServiceIf() {}
-  virtual BeverageType::type GetBeverage(const BeverageType::type beverage) = 0;
+  virtual void GetBeverage(std::string& _return, const BeverageType::type btype) = 0;
 };
 
 class BeverageServiceIfFactory {
@@ -52,15 +52,14 @@ class BeverageServiceIfSingletonFactory : virtual public BeverageServiceIfFactor
 class BeverageServiceNull : virtual public BeverageServiceIf {
  public:
   virtual ~BeverageServiceNull() {}
-  BeverageType::type GetBeverage(const BeverageType::type /* beverage */) {
-    BeverageType::type _return = (BeverageType::type)0;
-    return _return;
+  void GetBeverage(std::string& /* _return */, const BeverageType::type /* btype */) {
+    return;
   }
 };
 
 typedef struct _BeverageService_GetBeverage_args__isset {
-  _BeverageService_GetBeverage_args__isset() : beverage(false) {}
-  bool beverage :1;
+  _BeverageService_GetBeverage_args__isset() : btype(false) {}
+  bool btype :1;
 } _BeverageService_GetBeverage_args__isset;
 
 class BeverageService_GetBeverage_args {
@@ -68,7 +67,7 @@ class BeverageService_GetBeverage_args {
 
   BeverageService_GetBeverage_args(const BeverageService_GetBeverage_args&);
   BeverageService_GetBeverage_args& operator=(const BeverageService_GetBeverage_args&);
-  BeverageService_GetBeverage_args() : beverage((BeverageType::type)0) {
+  BeverageService_GetBeverage_args() : btype((BeverageType::type)0) {
   }
 
   virtual ~BeverageService_GetBeverage_args() noexcept;
@@ -76,15 +75,15 @@ class BeverageService_GetBeverage_args {
    * 
    * @see BeverageType
    */
-  BeverageType::type beverage;
+  BeverageType::type btype;
 
   _BeverageService_GetBeverage_args__isset __isset;
 
-  void __set_beverage(const BeverageType::type val);
+  void __set_btype(const BeverageType::type val);
 
   bool operator == (const BeverageService_GetBeverage_args & rhs) const
   {
-    if (!(beverage == rhs.beverage))
+    if (!(btype == rhs.btype))
       return false;
     return true;
   }
@@ -109,7 +108,7 @@ class BeverageService_GetBeverage_pargs {
    * 
    * @see BeverageType
    */
-  const BeverageType::type* beverage;
+  const BeverageType::type* btype;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -125,19 +124,15 @@ class BeverageService_GetBeverage_result {
 
   BeverageService_GetBeverage_result(const BeverageService_GetBeverage_result&);
   BeverageService_GetBeverage_result& operator=(const BeverageService_GetBeverage_result&);
-  BeverageService_GetBeverage_result() : success((BeverageType::type)0) {
+  BeverageService_GetBeverage_result() : success() {
   }
 
   virtual ~BeverageService_GetBeverage_result() noexcept;
-  /**
-   * 
-   * @see BeverageType
-   */
-  BeverageType::type success;
+  std::string success;
 
   _BeverageService_GetBeverage_result__isset __isset;
 
-  void __set_success(const BeverageType::type val);
+  void __set_success(const std::string& val);
 
   bool operator == (const BeverageService_GetBeverage_result & rhs) const
   {
@@ -166,11 +161,7 @@ class BeverageService_GetBeverage_presult {
 
 
   virtual ~BeverageService_GetBeverage_presult() noexcept;
-  /**
-   * 
-   * @see BeverageType
-   */
-  BeverageType::type* success;
+  std::string* success;
 
   _BeverageService_GetBeverage_presult__isset __isset;
 
@@ -203,9 +194,9 @@ class BeverageServiceClient : virtual public BeverageServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  BeverageType::type GetBeverage(const BeverageType::type beverage);
-  void send_GetBeverage(const BeverageType::type beverage);
-  BeverageType::type recv_GetBeverage();
+  void GetBeverage(std::string& _return, const BeverageType::type btype);
+  void send_GetBeverage(const BeverageType::type btype);
+  void recv_GetBeverage(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -254,13 +245,14 @@ class BeverageServiceMultiface : virtual public BeverageServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  BeverageType::type GetBeverage(const BeverageType::type beverage) {
+  void GetBeverage(std::string& _return, const BeverageType::type btype) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->GetBeverage(beverage);
+      ifaces_[i]->GetBeverage(_return, btype);
     }
-    return ifaces_[i]->GetBeverage(beverage);
+    ifaces_[i]->GetBeverage(_return, btype);
+    return;
   }
 
 };
@@ -295,9 +287,9 @@ class BeverageServiceConcurrentClient : virtual public BeverageServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  BeverageType::type GetBeverage(const BeverageType::type beverage);
-  int32_t send_GetBeverage(const BeverageType::type beverage);
-  BeverageType::type recv_GetBeverage(const int32_t seqid);
+  void GetBeverage(std::string& _return, const BeverageType::type btype);
+  int32_t send_GetBeverage(const BeverageType::type btype);
+  void recv_GetBeverage(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

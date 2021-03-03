@@ -19,10 +19,10 @@ all_structs = []
 
 
 class Iface(object):
-    def GetBeverage(self, beverage):
+    def GetBeverage(self, btype):
         """
         Parameters:
-         - beverage
+         - btype
 
         """
         pass
@@ -35,19 +35,19 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def GetBeverage(self, beverage):
+    def GetBeverage(self, btype):
         """
         Parameters:
-         - beverage
+         - btype
 
         """
-        self.send_GetBeverage(beverage)
+        self.send_GetBeverage(btype)
         return self.recv_GetBeverage()
 
-    def send_GetBeverage(self, beverage):
+    def send_GetBeverage(self, btype):
         self._oprot.writeMessageBegin('GetBeverage', TMessageType.CALL, self._seqid)
         args = GetBeverage_args()
-        args.beverage = beverage
+        args.btype = btype
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -101,7 +101,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = GetBeverage_result()
         try:
-            result.success = self._handler.GetBeverage(args.beverage)
+            result.success = self._handler.GetBeverage(args.btype)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -124,13 +124,13 @@ class Processor(Iface, TProcessor):
 class GetBeverage_args(object):
     """
     Attributes:
-     - beverage
+     - btype
 
     """
 
 
-    def __init__(self, beverage=None,):
-        self.beverage = beverage
+    def __init__(self, btype=None,):
+        self.btype = btype
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -143,7 +143,7 @@ class GetBeverage_args(object):
                 break
             if fid == 1:
                 if ftype == TType.I32:
-                    self.beverage = iprot.readI32()
+                    self.btype = iprot.readI32()
                 else:
                     iprot.skip(ftype)
             else:
@@ -156,9 +156,9 @@ class GetBeverage_args(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('GetBeverage_args')
-        if self.beverage is not None:
-            oprot.writeFieldBegin('beverage', TType.I32, 1)
-            oprot.writeI32(self.beverage)
+        if self.btype is not None:
+            oprot.writeFieldBegin('btype', TType.I32, 1)
+            oprot.writeI32(self.btype)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -179,7 +179,7 @@ class GetBeverage_args(object):
 all_structs.append(GetBeverage_args)
 GetBeverage_args.thrift_spec = (
     None,  # 0
-    (1, TType.I32, 'beverage', None, None, ),  # 1
+    (1, TType.I32, 'btype', None, None, ),  # 1
 )
 
 
@@ -204,8 +204,8 @@ class GetBeverage_result(object):
             if ftype == TType.STOP:
                 break
             if fid == 0:
-                if ftype == TType.I32:
-                    self.success = iprot.readI32()
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -219,8 +219,8 @@ class GetBeverage_result(object):
             return
         oprot.writeStructBegin('GetBeverage_result')
         if self.success is not None:
-            oprot.writeFieldBegin('success', TType.I32, 0)
-            oprot.writeI32(self.success)
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -240,7 +240,7 @@ class GetBeverage_result(object):
         return not (self == other)
 all_structs.append(GetBeverage_result)
 GetBeverage_result.thrift_spec = (
-    (0, TType.I32, 'success', None, None, ),  # 0
+    (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs

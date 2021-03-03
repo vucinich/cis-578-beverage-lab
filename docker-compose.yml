@@ -1,25 +1,21 @@
-version: "3"
-
-services:
-  
+version: "6"
+services: 
   order-beverage-service:
-    image: akatzuka/cis-578-beverage-lab:version_5
+    image: akatzuka/cis-578-beverage-lab:version_6
     hostname: order-beverage-service
     restart: always
     entrypoint: OrderBeverageService
 
   weather-service:
-    image: akatzuka/cis-578-beverage-lab:version_5
+    image: akatzuka/cis-578-beverage-lab:version_6
     hostname: weather-service
     restart: always
     entrypoint: WeatherService
-  
   beverage-service:
-    image: akatzuka/cis-578-beverage-lab:version_5
+    image: akatzuka/cis-578-beverage-lab:version_6
     hostname: beverage-service
     restart: always
     entrypoint: BeverageService
-
   nginx-thrift:
     image: yg397/openresty-thrift:xenial
     hostname: nginx-thrift

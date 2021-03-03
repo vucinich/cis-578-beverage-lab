@@ -80,18 +80,20 @@ void OrderBeverageServiceHandler::PlaceOrder(std::string& _return, const int64_t
     }
     auto beverage_client = beverage_client_wrapper->GetClient();
 
-    // by default get cold
-    BeverageType::type beverage;
+    // default 
+    std::string beverage;
+    BeverageType::type btype = BeverageType::type::COLD;
 
     // 2. call the remote procedure : GetBeverage
     try {
       if(weatherType == WeatherType::type::WARM)
       {
-        beverage = beverage_client->GetBeverage(BeverageType::type::HOT);
+        btype = BeverageType::type::HOT;
+        beverage_client->GetBeverage(beverage, btype);
       }
       else
       {
-        beverage = beverage_client->GetBeverage(BeverageType::type::COLD);
+        beverage_client->GetBeverage(beverage, btype);
       }
     } catch (...) {
       _beverage_client_pool->Push(beverage_client_wrapper);
