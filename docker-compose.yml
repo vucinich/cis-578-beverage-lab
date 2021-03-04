@@ -1,26 +1,33 @@
-version: "6"
+version: "3"
+
 services: 
+
   order-beverage-service:
-    image: akatzuka/cis-578-beverage-lab:version_6
+    image: akatzuka/cis-578-beverage-lab:version_7
     hostname: order-beverage-service
     restart: always
-    entrypoint: OrderBeverageService
+    entrypoint: OrderBeverageService 
 
   weather-service:
-    image: akatzuka/cis-578-beverage-lab:version_6
+    image: akatzuka/cis-578-beverage-lab:version_7
     hostname: weather-service
     restart: always
     entrypoint: WeatherService
+  
   beverage-service:
-    image: akatzuka/cis-578-beverage-lab:version_6
+    image: akatzuka/cis-578-beverage-lab:version_7
     hostname: beverage-service
     restart: always
     entrypoint: BeverageService
+
   nginx-thrift:
     image: yg397/openresty-thrift:xenial
     hostname: nginx-thrift
     ports:
       - 8080:8080
+      - 9090
+      - 9091
+      - 9092
     restart: always
     volumes:
       - ./nginx_reverse_proxy/lua-scripts:/usr/local/openresty/nginx/lua-scripts
